@@ -56,11 +56,15 @@ like to show all movies favorited by a profile on
 `http://localhost:3000/profiles/1`
 
 ```sh
-  # < Your Response Here >
+A serializer tells our API what information about a model can be sent back to
+the client as part of a response.
+
+Our 'Profile' serializer would look as follows:
 ```
 
 ```rb
 class ProfileSerializer < ActiveModel::Serializer
+  attributes :favorites
 end
 ```
 
@@ -68,19 +72,35 @@ end
 the above `Movies` and `Profiles`.
 
 ```sh
-  # < Your Response Here >
+bundle exec rails g scaffold Favorites movie:references profile:references
 ```
 
 1.  What is `Dependent: Destroy` and where/why would we use it?
 
 ```sh
-  # < Your Response Here >
+Dependent: Destroy is an option we an add to a relationship that is defined on
+a model. It does two things when a request comes in to destroy an instance of
+that model:
+
+1. Allows that record to be destroyed, even if foreign key constraints from the specified relationship would prevent things
+2. Destroys all instances of the related model, where that instance contain a reference to the relating model.
+
+In our example, we would add 'dependent: destroy' to the Profile model, just
+after 'has_many: favorites', so that when a user requests to destroy their
+profile, all favorites belonging to that profile are also destroyed.
 ```
+
 
 1.  Think of **ANY** example where you would have a one-to-many relationship as well
 as a many-to-many relationship in an application. You only need to list the
 description about the resources and how they relate to one another.
 
 ```sh
-  # < Your Response Here >
+A bill-splitting app might include 4 resources: Users, Profiles, Bills, and Shares.
+
+A User has one Profile, and a Profile belongs to a user.
+
+A User has many Bills, through Shares. A Bill has many Users, through Shares.
+
+A Share belongs to a User and belongs to a Bill.
 ```
